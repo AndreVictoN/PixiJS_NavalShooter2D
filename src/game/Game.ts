@@ -6,7 +6,7 @@ import { KeyboardInput } from "./input/KeyboardInput";
 export class Game {
     readonly player: Player;
 
-    private readonly inputManager: InputManager;
+    readonly inputManager: InputManager;
     private readonly keyboardInput: KeyboardInput;
 
     constructor(readonly config: GameConfig, readonly initialPlayerPosition: { x: number; y: number }) {

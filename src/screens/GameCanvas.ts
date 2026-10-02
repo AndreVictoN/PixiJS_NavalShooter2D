@@ -3,12 +3,14 @@ import { Assets, Sprite } from "pixi.js";
 import { useEffect, useRef } from "react";
 
 import { Game } from "../game/Game";
-import { gameConfig } from "../game/GameConfig";
 
-const GameCanvas = () => {
+interface GameCanvasProps {
+    game: Game;
+}
+
+const GameCanvas = ({ game }: GameCanvasProps) => {
     const { app } = useApplication();
 
-    const gameRef = useRef<Game>(new Game(gameConfig, { x: app.screen.width / 2, y: app.screen.height / 2 }));
     const playerSpriteRef = useRef<Sprite | null>(null);
 
     useEffect(() => {
@@ -38,12 +40,12 @@ const GameCanvas = () => {
     useTick((ticker) => {
         const deltaTime = ticker.deltaMS / 1000;
 
-        gameRef.current.update(deltaTime);
+        game.update(deltaTime);
 
         if(playerSpriteRef.current) {
-            playerSpriteRef.current.x = gameRef.current.player.x;
-            playerSpriteRef.current.y = gameRef.current.player.y;
-            playerSpriteRef.current.rotation = gameRef.current.player.rotation + Math.PI;
+            playerSpriteRef.current.x = game.player.x;
+            playerSpriteRef.current.y = game.player.y;
+            playerSpriteRef.current.rotation = game.player.rotation + Math.PI;
         }
     });
 
