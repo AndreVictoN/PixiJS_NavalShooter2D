@@ -29,23 +29,23 @@ const TouchButtons = ({ inputManager }: TouchButtonsProps) => {
 
     useEffect(() => {
         const loadTextures = async () => {
-            const normal = await Assets.load(
-                "/assets/png/default/ui/controls/button_round_normal.png"
-            );
+        const normal = await Assets.load(
+            "/assets/png/default/ui/controls/button_round_normal.png",
+        );
 
-            const pressed = await Assets.load(
-                "/assets/png/default/ui/controls/button_round_pressed.png"
-            );
+        const pressed = await Assets.load(
+            "/assets/png/default/ui/controls/button_round_pressed.png",
+        );
 
-            const directions = await Promise.all([
-                Assets.load("/assets/png/default/ui/controls/icon_forward.png"),
-                Assets.load("/assets/png/default/ui/controls/icon_turn_left.png"),
-                Assets.load("/assets/png/default/ui/controls/icon_turn_right.png"),
-            ]);
-            
-            setNormalTexture(normal);
-            setPressedTexture(pressed);
-            setDirectionTextures(directions);
+        const directions = await Promise.all([
+            Assets.load("/assets/png/default/ui/controls/icon_forward.png"),
+            Assets.load("/assets/png/default/ui/controls/icon_turn_left.png"),
+            Assets.load("/assets/png/default/ui/controls/icon_turn_right.png"),
+        ]);
+
+        setNormalTexture(normal);
+        setPressedTexture(pressed);
+        setDirectionTextures(directions);
         };
 
         loadTextures();
@@ -57,11 +57,38 @@ const TouchButtons = ({ inputManager }: TouchButtonsProps) => {
 
     return (
         <pixiContainer x={padding} y={y}>
-            <TouchButton normalTexture={normalTexture} pressedTexture={pressedTexture} directionTexture={directionTextures[0]} sizeScale={buttonScale} x={controlWidth / 2} y={buttonSize / 2} onInputStart={() => inputManager.setInput("moveForward", true)} onInputEnd={() => inputManager.setInput("moveForward", false)} />
+        <TouchButton
+            normalTexture={normalTexture}
+            pressedTexture={pressedTexture}
+            directionTexture={directionTextures[0]}
+            sizeScale={buttonScale}
+            x={controlWidth / 2}
+            y={buttonSize / 2}
+            onInputStart={() => inputManager.setInput("moveForward", true)}
+            onInputEnd={() => inputManager.setInput("moveForward", false)}
+        />
 
-            <TouchButton normalTexture={normalTexture} pressedTexture={pressedTexture} directionTexture={directionTextures[1]} sizeScale={buttonScale} x={buttonSize / 2} y={buttonSize + gapTop + buttonSize / 2} onInputStart={() => inputManager.setInput("turnLeft", true)} onInputEnd={() => inputManager.setInput("turnLeft", false)} />
+        <TouchButton
+            normalTexture={normalTexture}
+            pressedTexture={pressedTexture}
+            directionTexture={directionTextures[1]}
+            sizeScale={buttonScale}
+            x={buttonSize / 2}
+            y={buttonSize + gapTop + buttonSize / 2}
+            onInputStart={() => inputManager.setInput("turnLeft", true)}
+            onInputEnd={() => inputManager.setInput("turnLeft", false)}
+        />
 
-            <TouchButton normalTexture={normalTexture} pressedTexture={pressedTexture} directionTexture={directionTextures[2]} sizeScale={buttonScale} x={buttonSize + gapSide + buttonSize / 2} y={buttonSize + gapTop + buttonSize / 2} onInputStart={() => inputManager.setInput("turnRight", true)} onInputEnd={() => inputManager.setInput("turnRight", false)} />
+        <TouchButton
+            normalTexture={normalTexture}
+            pressedTexture={pressedTexture}
+            directionTexture={directionTextures[2]}
+            sizeScale={buttonScale}
+            x={buttonSize + gapSide + buttonSize / 2}
+            y={buttonSize + gapTop + buttonSize / 2}
+            onInputStart={() => inputManager.setInput("turnRight", true)}
+            onInputEnd={() => inputManager.setInput("turnRight", false)}
+        />
         </pixiContainer>
     );
 };

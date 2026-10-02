@@ -15,26 +15,28 @@ const GameCanvas = ({ game }: GameCanvasProps) => {
 
     useEffect(() => {
         const loadPlayerAssets = async () => {
-            const playerTexture = await Assets.load("/assets/png/default/ships/ship_3.png");
-            const playerSprite = new Sprite(playerTexture);
+        const playerTexture = await Assets.load(
+            "/assets/png/default/ships/ship_3.png",
+        );
+        const playerSprite = new Sprite(playerTexture);
 
-            playerSprite.anchor.set(0.5, 0.5);
-            playerSprite.x = app.screen.width / 2;
-            playerSprite.y = app.screen.height / 2;
+        playerSprite.anchor.set(0.5, 0.5);
+        playerSprite.x = app.screen.width / 2;
+        playerSprite.y = app.screen.height / 2;
 
-            playerSpriteRef.current = playerSprite;
-            app.stage.addChild(playerSprite);
-        }
+        playerSpriteRef.current = playerSprite;
+        app.stage.addChild(playerSprite);
+        };
 
         loadPlayerAssets();
 
-        return() => {
-            if (playerSpriteRef.current) {
-                app.stage.removeChild(playerSpriteRef.current);
-                playerSpriteRef.current.destroy();
-                playerSpriteRef.current = null;
-            }
+        return () => {
+        if (playerSpriteRef.current) {
+            app.stage.removeChild(playerSpriteRef.current);
+            playerSpriteRef.current.destroy();
+            playerSpriteRef.current = null;
         }
+        };
     }, [app]);
 
     useTick((ticker) => {
@@ -42,10 +44,10 @@ const GameCanvas = ({ game }: GameCanvasProps) => {
 
         game.update(deltaTime);
 
-        if(playerSpriteRef.current) {
-            playerSpriteRef.current.x = game.player.x;
-            playerSpriteRef.current.y = game.player.y;
-            playerSpriteRef.current.rotation = game.player.rotation + Math.PI;
+        if (playerSpriteRef.current) {
+        playerSpriteRef.current.x = game.player.x;
+        playerSpriteRef.current.y = game.player.y;
+        playerSpriteRef.current.rotation = game.player.rotation + Math.PI;
         }
     });
 

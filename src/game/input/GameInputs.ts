@@ -1,9 +1,9 @@
 export interface GameInputs {
-    moveForward: boolean;
-    turnRight: boolean;
-    turnLeft: boolean;
+  moveForward: boolean;
+  turnRight: boolean;
+  turnLeft: boolean;
 
-    fireFront: boolean;
-    fireRight: boolean;
-    fireLeft: boolean;
+  fireFront: boolean;
+  fireRight: boolean;
+  fireLeft: boolean;
 }
