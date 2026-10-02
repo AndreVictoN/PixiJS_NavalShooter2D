@@ -16,10 +16,7 @@ export default function App() {
   const gameRef = useRef<Game | null>(null);
 
   if (!gameRef.current) {
-    gameRef.current = new Game(gameConfig, {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
-    });
+    gameRef.current = new Game(gameConfig, { x: window.innerWidth / 2, y: window.innerHeight / 2 });
   }
 
   const game = gameRef.current;

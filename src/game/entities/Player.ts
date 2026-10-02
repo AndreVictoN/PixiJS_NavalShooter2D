@@ -8,10 +8,7 @@ export class Player {
   x: number;
   y: number;
 
-  constructor(
-    readonly config: GameConfig["player"],
-    readonly initialPosition: { x: number; y: number },
-  ) {
+  constructor(readonly config: GameConfig["player"], readonly initialPosition: { x: number; y: number }) {
     this.hp = config.maxHp;
     this.speed = config.speed;
     this.rotation = 0;
