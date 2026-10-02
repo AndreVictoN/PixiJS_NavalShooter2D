@@ -1,8 +1,9 @@
 import { useApplication, useTick } from "@pixi/react";
-import { Assets, Sprite } from "pixi.js";
+import { Assets, Container, Sprite } from "pixi.js";
 import { useEffect, useRef } from "react";
 
 import { Game } from "../game/Game";
+import { Water } from "../game/elements/Water"
 
 interface GameCanvasProps {
     game: Game;
@@ -11,10 +12,16 @@ interface GameCanvasProps {
 const GameCanvas = ({ game }: GameCanvasProps) => {
     const { app } = useApplication();
 
+    const worldRef = useRef<Container | null>(null);
     const playerSpriteRef = useRef<Sprite | null>(null);
 
     useEffect(() => {
-        const loadPlayerAssets = async () => {
+        const loadAssets = async () => {
+            const waterTexture = await Assets.load("/assets/png/default/tiles/tile_73.png");
+            const water = new Water(app.screen.width, app.screen.height, waterTexture);
+
+            worldRef?.current?.addChild(water);
+
             const playerTexture = await Assets.load("/assets/png/default/ships/ship_3.png",);
             const playerSprite = new Sprite(playerTexture);
 
@@ -23,14 +30,13 @@ const GameCanvas = ({ game }: GameCanvasProps) => {
             playerSprite.y = app.screen.height / 2;
 
             playerSpriteRef.current = playerSprite;
-            app.stage.addChild(playerSprite);
+            worldRef.current?.addChild(playerSprite);
         };
 
-        loadPlayerAssets();
+        loadAssets();
 
         return () => {
             if (playerSpriteRef.current) {
-                app.stage.removeChild(playerSpriteRef.current);
                 playerSpriteRef.current.destroy();
                 playerSpriteRef.current = null;
             }
@@ -49,7 +55,7 @@ const GameCanvas = ({ game }: GameCanvasProps) => {
         }
     });
 
-    return null;
+    return <pixiContainer ref={worldRef} />;
 };
 
 export default GameCanvas;

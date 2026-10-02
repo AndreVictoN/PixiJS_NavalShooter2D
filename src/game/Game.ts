@@ -2,7 +2,7 @@ import { InputManager } from "./input/InputManager";
 import { Player } from "./entities/Player";
 import { GameConfig } from "./GameConfig";
 import { KeyboardInput } from "./input/KeyboardInput";
-import { Arena } from "../elements/Arena";
+import { Arena } from "./elements/Arena";
 
 export class Game {
     readonly player: Player;

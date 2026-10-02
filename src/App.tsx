@@ -25,6 +25,7 @@ export default function App() {
     <main>
       <Application background={"#1099bb"} resizeTo={window} antialias>
         <GameCanvas game={game} />
+        
         <MovementTouchButtons inputManager={game.inputManager} />
       </Application>
     </main>
