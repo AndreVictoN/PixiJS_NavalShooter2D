@@ -15,7 +15,7 @@ export const gameConfig: GameConfig = {
 
     player: {
         maxHp: 100,
-        speed: 10,
-        rotationSpeed: 5,
+        speed: 100,
+        rotationSpeed: 3,
     },
 };

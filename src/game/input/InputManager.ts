@@ -9,4 +9,14 @@ export class InputManager {
         fireRight: false,
         fireLeft: false
     }
+
+    setInput(input: keyof GameInputs, value: boolean) {
+        this.inputs[input] = value;
+    }
+
+    reset() {
+        for (const input of Object.keys(this.inputs) as Array<keyof GameInputs>) {
+            this.inputs[input] = false;
+        }
+    }
 }
