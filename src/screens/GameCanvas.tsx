@@ -3,99 +3,114 @@ import { Assets, Container, Sprite, Texture } from "pixi.js";
 import { useEffect, useRef } from "react";
 
 import { Game } from "../game/Game";
-import { Water } from "../game/elements/Water"
+import { Water } from "../game/elements/Water";
 import { IslandLayout, islandTextures } from "../game/elements/IslandLayout";
 
 interface GameCanvasProps {
-    game: Game;
+  game: Game;
 }
 
 const GameCanvas = ({ game }: GameCanvasProps) => {
-    const { app } = useApplication();
+  const { app } = useApplication();
 
-    const worldRef = useRef<Container | null>(null);
-    const playerSpriteRef = useRef<Sprite | null>(null);
-    const loadedIslandTextures: Record<string, Texture> = {};
+  const worldRef = useRef<Container | null>(null);
+  const playerSpriteRef = useRef<Sprite | null>(null);
+  const loadedIslandTextures: Record<string, Texture> = {};
 
-    const renderScale = Math.min(1, Math.max(0.5, window.innerWidth / 1000));
+  const renderScale = Math.min(1, Math.max(0.5, window.innerWidth / 1000));
 
-    useEffect(() => {
-        const loadAssets = async () => {
-            const waterTexture = await Assets.load("/assets/png/default/tiles/tile_73.png");
-            const water = new Water(app.screen.width, app.screen.height, waterTexture);
+  useEffect(() => {
+    const loadAssets = async () => {
+      const waterTexture = await Assets.load(
+        "/assets/png/default/tiles/tile_73.png",
+      );
+      const water = new Water(
+        app.screen.width,
+        app.screen.height,
+        waterTexture,
+      );
 
-            worldRef?.current?.addChild(water);
+      worldRef?.current?.addChild(water);
 
-            for(const [key, element] of Object.entries(islandTextures)) {
-                loadedIslandTextures[key] = await Assets.load(element);
-            }
+      for (const [key, element] of Object.entries(islandTextures)) {
+        loadedIslandTextures[key] = await Assets.load(element);
+      }
 
-            const island = new IslandLayout(loadedIslandTextures);
-            island.scale = renderScale;
-            worldRef?.current?.addChild(island);
+      const island = new IslandLayout(loadedIslandTextures);
+      island.scale = renderScale;
+      worldRef?.current?.addChild(island);
 
-            const playerTexture = await Assets.load("/assets/png/default/ships/ship_9.png");
-            const playerSprite = new Sprite(playerTexture);
+      const playerTexture = await Assets.load(
+        "/assets/png/default/ships/ship_9.png",
+      );
+      const playerSprite = new Sprite(playerTexture);
 
-            playerSprite.scale = renderScale;
+      playerSprite.scale = renderScale;
 
-            playerSprite.anchor.set(0.5, 0.5);
-            playerSprite.x = app.screen.width / 2;
-            playerSprite.y = app.screen.height / 2;
-            
-            playerSpriteRef.current = playerSprite;
-            worldRef?.current?.addChild(playerSprite);
+      playerSprite.anchor.set(0.5, 0.5);
+      playerSprite.x = app.screen.width / 2;
+      playerSprite.y = app.screen.height / 2;
 
-            const enemyTexture = await Assets.load("/assets/png/default/ships/ship_6.png");
-            game.enemy.setTexture(enemyTexture);
-            game.enemy.scale = renderScale;
-            worldRef?.current?.addChild(game.enemy);
+      playerSpriteRef.current = playerSprite;
+      worldRef?.current?.addChild(playerSprite);
 
-            await Assets.load("/assets/png/default/ship_parts/cannon_ball.png");
-            worldRef?.current?.addChild(game.projectilesContainer);
-        };
+      const enemyTexture = await Assets.load(
+        "/assets/png/default/ships/ship_6.png",
+      );
+      game.enemy.setTexture(enemyTexture);
+      game.enemy.scale = renderScale;
+      worldRef?.current?.addChild(game.enemy);
 
-        loadAssets();
+      await Assets.load("/assets/png/default/ship_parts/cannon_ball.png");
+      worldRef?.current?.addChild(game.projectilesContainer);
+    };
 
-        return () => {
-            if (playerSpriteRef.current) {
-                playerSpriteRef.current.destroy();
-                playerSpriteRef.current = null;
-            }
-        };
-    }, [app]);
+    loadAssets();
 
-    useTick((ticker) => {
-        const deltaTime = ticker.deltaMS / 1000;
+    return () => {
+      if (playerSpriteRef.current) {
+        playerSpriteRef.current.destroy();
+        playerSpriteRef.current = null;
+      }
+    };
+  }, [app]);
 
-        game.update(deltaTime);
+  useTick((ticker) => {
+    const deltaTime = ticker.deltaMS / 1000;
 
-        if (playerSpriteRef.current) {
-            playerSpriteRef.current.x = game.player.x;
-            playerSpriteRef.current.y = game.player.y;
-            playerSpriteRef.current.rotation = game.player.rotation + Math.PI;
-        }
+    game.update(deltaTime);
 
-        for (let i = game.projectileEntities.length - 1; i >= 0; i--) {
-            const projectile = game.projectileEntities[i];
+    if (playerSpriteRef.current) {
+      playerSpriteRef.current.x = game.player.x;
+      playerSpriteRef.current.y = game.player.y;
+      playerSpriteRef.current.rotation = game.player.rotation + Math.PI;
+    }
 
-            projectile.update(deltaTime);
+    for (let i = game.projectileEntities.length - 1; i >= 0; i--) {
+      const projectile = game.projectileEntities[i];
 
-            if (projectile.x < 0 || projectile.x > app.screen.width || projectile.y < 0 || projectile.y > app.screen.height) {
-                game.projectilesContainer.removeChild(projectile);
-                projectile.destroy();
+      projectile.update(deltaTime);
 
-                game.projectileEntities.splice(i, 1);
-            }
-        }
+      if (
+        projectile.x < 0 ||
+        projectile.x > app.screen.width ||
+        projectile.y < 0 ||
+        projectile.y > app.screen.height
+      ) {
+        game.projectilesContainer.removeChild(projectile);
+        projectile.destroy();
 
-        if (game.player.dead && playerSpriteRef.current) {
-            playerSpriteRef.current.destroy();
-            playerSpriteRef.current = null;
-        }
-    });
+        game.projectileEntities.splice(i, 1);
+      }
+    }
 
-    return <pixiContainer ref={worldRef} />;
+    if (game.player.dead && playerSpriteRef.current) {
+      playerSpriteRef.current.destroy();
+      playerSpriteRef.current = null;
+    }
+  });
+
+  return <pixiContainer ref={worldRef} />;
 };
 
 export default GameCanvas;

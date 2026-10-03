@@ -1,4 +1,4 @@
 export interface Arena {
-    width: number;
-    height: number;
+  width: number;
+  height: number;
 }
