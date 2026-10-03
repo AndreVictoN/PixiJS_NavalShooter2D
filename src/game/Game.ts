@@ -23,6 +23,8 @@ export class Game {
 
   enemyDead: boolean;
 
+  scale: number;
+
   constructor(
     readonly config: GameConfig,
     readonly initialPlayerPosition: { x: number; y: number },
@@ -34,7 +36,11 @@ export class Game {
     this.keyboardInput = new KeyboardInput(this.inputManager);
 
     this.enemy = new Enemy();
-    this.enemy.position.set(1700, 100);
+
+    this.scale = Math.min(1, Math.max(0.5, window.innerWidth / 1000));
+
+    this.enemy.position.set(1700 * this.scale, 100 * this.scale);
+    
 
     this.arena = {
       width: window.innerWidth,
@@ -64,12 +70,12 @@ export class Game {
     this.player.update(deltaTime, this.inputManager.inputs.moveForward, turn);
 
     this.player.x = Math.max(
-      33,
-      Math.min(this.player.x, this.arena.width - 33),
+      33 * this.scale,
+      Math.min(this.player.x, this.arena.width - 33 * this.scale),
     );
     this.player.y = Math.max(
       33,
-      Math.min(this.player.y, this.arena.height - 33),
+      Math.min(this.player.y, this.arena.height - 33 * this.scale),
     );
 
     const playerCollision = this.checkCollision(
