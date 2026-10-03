@@ -43,12 +43,12 @@ export class Game {
         this.player.x = Math.max(33, Math.min(this.player.x, this.arena.width - 33));
         this.player.y = Math.max(33, Math.min(this.player.y, this.arena.height - 33));
 
-        const dx = this.player.x - this.island.ellipseCollider.x;
-        const dy = this.player.y - this.island.ellipseCollider.y;
+        const playerCollision = this.checkCollision(this.player.x, this.player.y,
+            this.island.ellipseCollider.x, this.island.ellipseCollider.y,
+            this.island.ellipseCollider.radiusX, this.island.ellipseCollider.radiusY
+        );
 
-        const collision = Math.pow(dx, 2) / Math.pow(this.island.ellipseCollider.radiusX, 2) + Math.pow(dy, 2) / Math.pow(this.island.ellipseCollider.radiusY, 2) < 1;
-
-        if(collision) {
+        if(playerCollision) {
             this.player.x = previousX;
             this.player.y = previousY;
         }
@@ -66,6 +66,27 @@ export class Game {
 
             this.inputManager.setInput("fireLeft", false);
         }
+
+        for (let i = this.projectileEntities.length - 1; i >= 0; i--) {
+            const projectile = this.projectileEntities[i];
+
+            const projectileCollision = this.checkCollision(projectile.x, projectile.y,
+                this.island.ellipseCollider.x, this.island.ellipseCollider.y,
+                this.island.ellipseCollider.radiusX, this.island.ellipseCollider.radiusY
+            );
+
+            if (projectileCollision) {
+                projectile.destroy();
+                this.projectileEntities.splice(i, 1);
+            }
+        }
+    }
+
+    checkCollision(x1: number, y1: number, x2: number, y2: number, rx: number, ry: number) {
+        const dx = x1 - x2;
+        const dy = y1 - y2;
+
+        return Math.pow(dx, 2) / Math.pow(rx, 2) + Math.pow(dy, 2) / Math.pow(ry, 2) < 1;
     }
 
     shoot(direction: string) {
