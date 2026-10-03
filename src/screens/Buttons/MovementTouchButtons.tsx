@@ -14,14 +14,14 @@ const TouchButtons = ({ inputManager }: TouchButtonsProps) => {
 
     const buttonScale = Math.min(1.2, Math.max(0.5, app.screen.width / 1000));
     const buttonSize = 64 * buttonScale;
-    const gapSide = buttonSize * 2;
-    const gapTop = buttonSize * 0.5;
-    const padding = buttonSize * 0.5;
+    const gapSide = buttonSize * 1.4;
+    const paddingSide = buttonSize * 0.5;
+    const paddingBottom = buttonSize;
 
     const controlWidth = buttonSize * 2 + gapSide;
-    const controlHeight = buttonSize * 2 + gapTop;
+    const controlHeight = buttonSize * 2;
 
-    const y = app.screen.height - padding - controlHeight;
+    const y = app.screen.height - paddingBottom - controlHeight;
 
     const [normalTexture, setNormalTexture] = useState<Texture | null>(null);
     const [pressedTexture, setPressedTexture] = useState<Texture | null>(null);
@@ -52,17 +52,17 @@ const TouchButtons = ({ inputManager }: TouchButtonsProps) => {
     }
 
     return (
-        <pixiContainer x={padding} y={y}>
+        <pixiContainer x={paddingSide} y={y}>
             <TouchButton normalTexture={normalTexture} pressedTexture={pressedTexture} directionTexture={directionTextures[0]} sizeScale={buttonScale}
-                x={controlWidth / 2} y={buttonSize / 2} onInputStart={() => inputManager.setInput("moveForward", true)}
+                x={controlWidth / 2} y={buttonSize} onInputStart={() => inputManager.setInput("moveForward", true)}
                 onInputEnd={() => inputManager.setInput("moveForward", false)} />
 
             <TouchButton normalTexture={normalTexture} pressedTexture={pressedTexture} directionTexture={directionTextures[1]} sizeScale={buttonScale}
-                x={buttonSize / 2} y={buttonSize + gapTop + buttonSize / 2} onInputStart={() => inputManager.setInput("turnLeft", true)}
+                x={buttonSize / 2} y={buttonSize + buttonSize / 2} onInputStart={() => inputManager.setInput("turnLeft", true)}
                 onInputEnd={() => inputManager.setInput("turnLeft", false)} />
 
             <TouchButton normalTexture={normalTexture} pressedTexture={pressedTexture} directionTexture={directionTextures[2]} sizeScale={buttonScale}
-                x={buttonSize + gapSide + buttonSize / 2} y={buttonSize + gapTop + buttonSize / 2} onInputStart={() => inputManager.setInput("turnRight", true)}
+                x={buttonSize + gapSide + buttonSize / 2} y={buttonSize + buttonSize / 2} onInputStart={() => inputManager.setInput("turnRight", true)}
                 onInputEnd={() => inputManager.setInput("turnRight", false)}/>
         </pixiContainer>
     );

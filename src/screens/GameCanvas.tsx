@@ -1,9 +1,10 @@
 import { useApplication, useTick } from "@pixi/react";
-import { Assets, Container, Sprite } from "pixi.js";
+import { Assets, Container, Sprite, Texture } from "pixi.js";
 import { useEffect, useRef } from "react";
 
 import { Game } from "../game/Game";
 import { Water } from "../game/elements/Water"
+import { IslandLayout, islandTextures } from "../game/elements/IslandRender";
 
 interface GameCanvasProps {
     game: Game;
@@ -14,6 +15,7 @@ const GameCanvas = ({ game }: GameCanvasProps) => {
 
     const worldRef = useRef<Container | null>(null);
     const playerSpriteRef = useRef<Sprite | null>(null);
+    const loadedIslandTextures: Record<string, Texture> = {};
 
     useEffect(() => {
         const loadAssets = async () => {
@@ -22,7 +24,14 @@ const GameCanvas = ({ game }: GameCanvasProps) => {
 
             worldRef?.current?.addChild(water);
 
-            const playerTexture = await Assets.load("/assets/png/default/ships/ship_3.png",);
+            for(const [key, element] of Object.entries(islandTextures)) {
+                loadedIslandTextures[key] = await Assets.load(element);
+            }
+
+            const island = new IslandLayout(loadedIslandTextures);
+            worldRef?.current?.addChild(island);
+
+            const playerTexture = await Assets.load("/assets/png/default/ships/ship_9.png",);
             const playerSprite = new Sprite(playerTexture);
 
             playerSprite.anchor.set(0.5, 0.5);
