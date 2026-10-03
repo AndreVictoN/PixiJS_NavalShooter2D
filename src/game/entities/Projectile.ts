@@ -4,14 +4,16 @@ export class Projectile extends Sprite {
     speed = 500;
     damage = 1;
     direction: string;
+    owner: string;
 
-    constructor(texture: Texture, x: number, y: number, rotation: number, direction: string) {
+    constructor(texture: Texture, x: number, y: number, rotation: number, direction: string, owner: string) {
         super(texture);
 
         this.anchor.set(0.5);
         this.position.set(x, y);
         this.rotation = rotation;
         this.direction = direction;
+        this.owner = owner;
     }
 
     update(deltaTime: number) {

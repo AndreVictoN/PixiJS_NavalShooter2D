@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 import { Game } from "../game/Game";
 import { Water } from "../game/elements/Water"
-import { IslandLayout, islandTextures } from "../game/elements/IslandRender";
+import { IslandLayout, islandTextures } from "../game/elements/IslandLayout";
 
 interface GameCanvasProps {
     game: Game;
@@ -16,6 +16,8 @@ const GameCanvas = ({ game }: GameCanvasProps) => {
     const worldRef = useRef<Container | null>(null);
     const playerSpriteRef = useRef<Sprite | null>(null);
     const loadedIslandTextures: Record<string, Texture> = {};
+
+    const renderScale = Math.min(1, Math.max(0.5, window.innerWidth / 1000));
 
     useEffect(() => {
         const loadAssets = async () => {
@@ -29,10 +31,13 @@ const GameCanvas = ({ game }: GameCanvasProps) => {
             }
 
             const island = new IslandLayout(loadedIslandTextures);
+            island.scale = renderScale;
             worldRef?.current?.addChild(island);
 
             const playerTexture = await Assets.load("/assets/png/default/ships/ship_9.png");
             const playerSprite = new Sprite(playerTexture);
+
+            playerSprite.scale = renderScale;
 
             playerSprite.anchor.set(0.5, 0.5);
             playerSprite.x = app.screen.width / 2;
@@ -40,6 +45,11 @@ const GameCanvas = ({ game }: GameCanvasProps) => {
             
             playerSpriteRef.current = playerSprite;
             worldRef?.current?.addChild(playerSprite);
+
+            const enemyTexture = await Assets.load("/assets/png/default/ships/ship_6.png");
+            game.enemy.setTexture(enemyTexture);
+            game.enemy.scale = renderScale;
+            worldRef?.current?.addChild(game.enemy);
 
             await Assets.load("/assets/png/default/ship_parts/cannon_ball.png");
             worldRef?.current?.addChild(game.projectilesContainer);
@@ -66,10 +76,6 @@ const GameCanvas = ({ game }: GameCanvasProps) => {
             playerSpriteRef.current.rotation = game.player.rotation + Math.PI;
         }
 
-        for(const projectile of game.projectileEntities) {
-            projectile.update(deltaTime);
-        }
-
         for (let i = game.projectileEntities.length - 1; i >= 0; i--) {
             const projectile = game.projectileEntities[i];
 
@@ -81,6 +87,11 @@ const GameCanvas = ({ game }: GameCanvasProps) => {
 
                 game.projectileEntities.splice(i, 1);
             }
+        }
+
+        if (game.player.dead && playerSpriteRef.current) {
+            playerSpriteRef.current.destroy();
+            playerSpriteRef.current = null;
         }
     });
 

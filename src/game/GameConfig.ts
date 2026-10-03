@@ -14,7 +14,7 @@ export const gameConfig: GameConfig = {
   matchDuration: 180,
 
   player: {
-    maxHp: 100,
+    maxHp: 5,
     speed: 140,
     rotationSpeed: 3,
   },

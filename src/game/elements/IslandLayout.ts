@@ -41,9 +41,13 @@ export const islands = [
 export class IslandLayout extends Container {
     readonly textures: Record<string, Texture>;
     readonly tileSize: number;
+    
+    imageScale: number;
 
     constructor(islandTextures: Record<string, Texture>) {
         super();
+
+        this.imageScale = Math.min(1, Math.max(0.5, window.innerWidth / 1000));
 
         this.textures = islandTextures;
         this.tileSize = 64;
