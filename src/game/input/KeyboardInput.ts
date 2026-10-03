@@ -8,7 +8,7 @@ export class KeyboardInput {
 
     q: "fireLeft",
     e: "fireRight",
-    space: "fireFront",
+    w: "fireFront",
   };
 
   constructor(readonly inputManager: InputManager) {
@@ -19,7 +19,7 @@ export class KeyboardInput {
   private handleKey = (event: KeyboardEvent, isDown: boolean) => {
     const inputKey = this.inputs[event.key];
 
-    if (!inputKey) return;
+    if (!inputKey || event.repeat) return;
 
     event.preventDefault();
 

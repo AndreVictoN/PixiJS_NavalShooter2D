@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { Game } from "./game/Game";
 import { gameConfig } from "./game/GameConfig";
 import MovementTouchButtons from "./screens/Buttons/MovementTouchButtons";
+import ProjectileTouchButtons from "./screens/Buttons/ProjectileTouchButtons";
 
 extend({
   Sprite,
@@ -27,6 +28,7 @@ export default function App() {
         <GameCanvas game={game} />
         
         <MovementTouchButtons inputManager={game.inputManager} />
+        <ProjectileTouchButtons inputManager={game.inputManager} />
       </Application>
     </main>
   );
